@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <title>Video Conferencing using RTCMultiConnection</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
-  <link rel="stylesheet" href="stylesheet.css">
+  <link rel="stylesheet" href="assets/css/stylesheet.css">
 </head>
 <body>
 
@@ -34,15 +34,15 @@
     <div id="room-urls" style="text-align: center;display: none;background: #F1EDED;margin: 15px -10px;border: 1px solid rgb(189, 189, 189);border-left: 0;border-right: 0;"></div>
   </section>
 
-<script src="RTCMultiConnection.js"></script>
-<script src="adapter.js"></script>
+<script src="assets/js/RTCMultiConnection.js"></script>
+<script src="assets/js/adapter.js"></script>
 <script src="/socket.io/socket.io.js"></script>
 
 <!-- custom layout for HTML5 audio/video elements -->
-<link rel="stylesheet" href="getHTMLMediaElement.css">
-<script src="getHTMLMediaElement.js"></script>
+<link rel="stylesheet" href="assets/css/getHTMLMediaElement.css">
+<script src="assets/js/getHTMLMediaElement.js"></script>
 
-<script src="RecordRTC.js"></script>
+<script src="assets/js/RecordRTC.js"></script>
 <script>
 // ......................................................
 // .......................UI Code........................
@@ -124,7 +124,7 @@ var connection = new RTCMultiConnection();
 
 connection.socketURL = '/';
 
-connection.socketMessageEvent = 'video-conference-demo';
+connection.socketMessageEvent = 'rC3-VOCcast';
 
 connection.session = {
     audio: true,
