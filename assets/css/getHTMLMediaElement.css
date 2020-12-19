@@ -22,7 +22,7 @@ Documentation - github.com/muaz-khan/WebRTC-Experiment/tree/master/getMediaEleme
 }
 
 .media-container {
-    width: 36%;
+    width: 100%;
     display: inline-block;
     border: 1px solid rgb(0, 0, 0);
     border-radius: 4px;
