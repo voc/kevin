@@ -45,12 +45,19 @@
                 </div>
             </div>
             <div class="row">
-                <div id="videos-container" style="margin: 20px 0;"></div>
-                <div id="room-urls" style="text-align: center;display: none;background: #F1EDED;margin: 15px -10px;border: 1px solid rgb(189, 189, 189);border-left: 0;border-right: 0;"></div>
-                <input type="text" id="room-id" value="abcdef" autocorrect=off autocapitalize=off size=20 style="display: none;">
+                <div class="col-auto align-self-center mx-auto">
+                    <div id="videos-container" style="margin: 20px 0;"></div>
+                </div>
             </div>
             <div class="row">
-                <label><input type="checkbox" id="record-entire-conference"> Record Entire Conference In The Browser?</label>
+                <div class="col-auto align-self-center mx-auto">
+                    <div id="videos-container" style="margin: 20px 0;"></div>
+                    <div id="room-urls" style="display: none;background: #F1EDED;border: 1px solid rgb(189, 189, 189);border-left: 0;border-right: 0;"></div>
+                    <input type="text" id="room-id" value="abcdef" autocorrect=off autocapitalize=off size=20 style="display: none;">
+                </div>
+            </div>
+            <div class="row">
+                <label><input type="checkbox" id="record-entire-conference">Record Entire Conference In The Browser?</label>
                 <span id="recording-status" style="display: none;"></span>
                 <button id="btn-stop-recording" style="display: none;">Stop Recording</button>
             </div>
