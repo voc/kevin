@@ -14,14 +14,14 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-light navbar-expand bg-light navigation-clean">
+    <nav id="nav" class="navbar navbar-light navbar-expand bg-light navigation-clean">
         <div class="container"><a class="navbar-brand" href="/">VOCcast</a><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"></button>
             <div class="collapse navbar-collapse" id="navcol-1"></div>
         </div>
     </nav>
     <section class="features-icons bg-light text-center">
         <div class="container">
-            <div class="row">
+            <div class="row" id="header">
                 <div class="col-lg-4">
                     <div class="mx-auto features-icons-item mb-5 mb-lg-0 mb-lg-3">
                         <div class="d-flex features-icons-icon" id="open-room"><i class="material-icons m-auto text-primary" data-bs-hover-animate="pulse">group_add</i></div>
@@ -67,7 +67,7 @@
     </section>
     <footer class="footer bg-light">
         <div class="container">
-            <div class="row">
+            <div class="row" id="footer">
                 <div class="col-lg-6 my-auto h-100 text-center text-lg-left">
                     <ul class="list-inline mb-2"></ul>
                     <p class="text-muted small mb-4 mb-lg-0">rC3 Edition</p>
@@ -99,7 +99,7 @@
             disableInputButtons();
             connection.open(document.getElementById('room-id').value, function(isRoomOpened, roomid, error) {
                 if(isRoomOpened === true) {
-                  showRoomURL(connection.sessionid);
+                  showRoomURL(connection.sessionid, 'group');
                 }
                 else {
                   disableInputButtons(true);
@@ -299,12 +299,22 @@
             video.srcObject = event.stream;
         
             var width = parseInt(connection.videosContainer.clientWidth / 3) - 20;
-            var mediaElement = getHTMLMediaElement(video, {
-                title: event.userid,
-                buttons: ['full-screen'],
-                width: width,
-                showOnMouseEnter: false
-            });
+            if (params.action && params.action == 'view') {
+                var mediaElement = getHTMLMediaElement(video, {
+                    buttons: [''],
+                    width: width,
+                    showOnMouseEnter: false
+                });
+                //document.querySelector("video").requestFullscreen();
+            }
+            else {
+                var mediaElement = getHTMLMediaElement(video, {
+                    title: event.userid,
+                    buttons: ['full-screen'],
+                    width: width,
+                    showOnMouseEnter: true
+                });
+            }
         
             connection.videosContainer.appendChild(mediaElement);
         
@@ -396,9 +406,22 @@
         // ALL below scripts are redundant!!!
         // ..................................
         
+        function disableInputButtonsView() {
+            document.getElementById('room-id').onkeyup();
+        
+            document.getElementById('header').style.display = "none";
+            document.getElementById('nav').style.display = "none";
+            document.getElementById('footer').style.display = "none";
+            document.getElementById('open-room').disabled = true;
+            document.getElementById('webcam-share').disabled = true;
+            document.getElementById('screen-share').disabled = true;
+            document.getElementById('room-id').disabled = true;
+        }        
+        
         function disableInputButtons(enable) {
             document.getElementById('room-id').onkeyup();
         
+            document.getElementById('header').style.display = "none";
             document.getElementById('open-room').disabled = !enable;
             document.getElementById('webcam-share').disabled = !enable;
             document.getElementById('screen-share').disabled = !enable;
@@ -409,18 +432,23 @@
         // ......................Handling Room-ID................
         // ......................................................
         
-        function showRoomURL(roomid) {
+        function showRoomURL(roomid, source) {
             var roomHashURL = '#' + roomid;
             var roomQueryStringURL = '?roomid=' + roomid;
             var roomViewQueryStringURL = '?action=view&roomid=' + roomid;
         
-            var html = '<h2>Unique URL for your room:</h2><br>';
+            var html = '<h3>Share URLs:</h3><br>';
         
-            html += 'Hash URL: <a href="' + roomHashURL + '" target="_blank">' + roomHashURL + '</a>';
-            html += '<br>';
-            html += 'Join URL: <a href="' + roomQueryStringURL + '" target="_blank">' + roomQueryStringURL + '</a>';
-            html += '<br>';
+            //html += 'Hash URL: <a href="' + roomHashURL + '" target="_blank">' + roomHashURL + '</a>';
+            //html += '<br>';
+            if (source == 'group') {
+                html += 'Join URL: <a href="' + roomQueryStringURL + '" target="_blank">' + roomQueryStringURL + '</a>';
+                html += '<br>';
+            }
+            
             html += 'View URL: <a href="' + roomViewQueryStringURL + '" target="_blank">' + roomViewQueryStringURL + '</a>';
+            html += '<br>';
+            html += 'View URL (OBS): <a href="view.html' + roomViewQueryStringURL + '" target="_blank">' + roomViewQueryStringURL + '</a>';
         
         
             var roomURLsDiv = document.getElementById('room-urls');
@@ -487,6 +515,7 @@
                                  oneway: true
                              };
                             connection.join(roomid);
+                            disableInputButtonsView();
                             return;
                         } else {
                             connection.join(roomid);
@@ -496,7 +525,6 @@
                     setTimeout(reCheckRoomPresence, 5000);
                 });
             })();
-        
             disableInputButtons();
         }
         
