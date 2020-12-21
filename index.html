@@ -298,8 +298,8 @@
             }
             video.srcObject = event.stream;
         
-            var width = parseInt(connection.videosContainer.clientWidth / 3) - 20;
             if (params.action && params.action == 'view') {
+                var width = params.width;
                 var mediaElement = getHTMLMediaElement(video, {
                     buttons: [''],
                     width: width,
@@ -308,6 +308,7 @@
                 //document.querySelector("video").requestFullscreen();
             }
             else {
+                var width = parseInt(connection.videosContainer.clientWidth / 3) - 20;
                 var mediaElement = getHTMLMediaElement(video, {
                     title: event.userid,
                     buttons: ['full-screen'],
@@ -432,7 +433,7 @@
         // ......................Handling Room-ID................
         // ......................................................
         
-        function showRoomURL(roomid, source) {
+        function showRoomURL(roomid, source, width) {
             var roomHashURL = '#' + roomid;
             var roomQueryStringURL = '?roomid=' + roomid;
             var roomViewQueryStringURL = '?action=view&roomid=' + roomid;
@@ -448,7 +449,9 @@
             
             html += 'View URL: <a href="' + roomViewQueryStringURL + '" target="_blank">' + roomViewQueryStringURL + '</a>';
             html += '<br>';
-            html += 'View URL (OBS): <a href="view.html' + roomViewQueryStringURL + '" target="_blank">' + roomViewQueryStringURL + '</a>';
+            html += 'View URL OBS (720p): <a href="view.html' + roomViewQueryStringURL + '&width=1280" target="_blank">view.html' + roomViewQueryStringURL + '&width=1280</a>';
+            html += '<br>';
+            html += 'View URL OBS (1080p): <a href="view.html' + roomViewQueryStringURL + '&width=1920" target="_blank">view.html' + roomViewQueryStringURL + '&width=1920</a>';
         
         
             var roomURLsDiv = document.getElementById('room-urls');

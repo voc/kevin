@@ -22,7 +22,7 @@
     <script src="/assets/js/RTCMultiConnection.js"></script>
     <script src="/assets/js/adapter.js"></script>
     <script src="/socket.io/socket.io.js"></script>
-    <link rel="stylesheet" href="/assets/css/getHTMLMediaElement.css">
+    <link rel="stylesheet" href="/assets/css/getHTMLMediaElementFull.css">
     <script src="/assets/js/getHTMLMediaElement.js"></script>
     <script src="/assets/js/RecordRTC.js"></script>
     <script>
@@ -160,7 +160,7 @@
             }
             video.srcObject = event.stream;
         
-            var width = parseInt(connection.videosContainer.clientWidth / 3) - 20;
+            var width = params.width;
             if (params.action && params.action == 'view') {
                 var mediaElement = getHTMLMediaElement(video, {
                     buttons: [''],
