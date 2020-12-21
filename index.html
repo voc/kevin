@@ -51,16 +51,25 @@
             </div>
             <div class="row">
                 <div class="col-auto align-self-center mx-auto">
-                    <div id="videos-container" style="margin: 20px 0;"></div>
-                    <div id="room-urls" style="display: none;background: #F1EDED;border: 1px solid rgb(189, 189, 189);border-left: 0;border-right: 0;"></div>
+                    <div id="videos-container"></div>
+                    <div id="room-urls" style="display: none;background: #F1EDED;border: 1px solid rgb(189, 189, 189);border-left: 0;border-right: 0;margin: 10px;"></div>
                     <input type="text" id="room-id" value="abcdef" autocorrect=off autocapitalize=off size=20 style="display: none;">
                 </div>
             </div>
             <div class="row">
                 <div class="col-auto align-self-center mx-auto">
-                    <label><input type="checkbox" id="record-entire-conference">Record?</label>
-                    <span id="recording-status" style="display: none;"></span>
-                    <button id="btn-stop-recording" style="display: none;">Stop Recording</button>
+                    <label id="record"><input type="checkbox" id="record-entire-conference">Record?</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4 align-self-center mx-auto">
+                        <span id="recording-status" style="display: none;"></span>
+                </div>
+                <div class="col-lg-4 align-self-center mx-auto">
+                        <span id="recording-time" style="display: none;"></span>
+                </div>
+                <div class="col-lg-4 align-self-center mx-auto">      
+                    <button class="btn btn-primary" id="btn-stop-recording" style="display: none;" type="button">Stop Recording</button>
                 </div>
             </div>
         </div>
@@ -137,6 +146,7 @@
                   alert(error);
                 }
             });
+            params.source = 'webcam';
         };
         
         document.getElementById('screen-share').onclick = function() {
@@ -307,6 +317,12 @@
                 });
                 //document.querySelector("video").requestFullscreen();
             }
+            else if (params.source && params.source == 'webcam') {
+                var mediaElement = getHTMLMediaElement(video, {
+                    buttons: ['full-screen'],
+                    showOnMouseEnter: true
+                });
+            }
             else {
                 var width = parseInt(connection.videosContainer.clientWidth / 3) - 20;
                 var mediaElement = getHTMLMediaElement(video, {
@@ -328,18 +344,47 @@
             // to keep room-id in cache
             localStorage.setItem(connection.socketMessageEvent, connection.sessionid);
         
+
+            function calculateTimeDuration(secs) {
+                var hr = Math.floor(secs / 3600);
+                var min = Math.floor((secs - (hr * 3600)) / 60);
+                var sec = Math.floor(secs - (hr * 3600) - (min * 60));
+
+                if (min < 10) {
+                    min = "0" + min;
+                }
+
+                if (sec < 10) {
+                    sec = "0" + sec;
+                }
+
+                if(hr <= 0) {
+                    return min + ':' + sec;
+                }
+
+                return hr + ':' + min + ':' + sec;
+            }
+
+
             chkRecordConference.parentNode.style.display = 'none';
         
             if(chkRecordConference.checked === true) {
               btnStopRecording.style.display = 'inline-block';
               recordingStatus.style.display = 'inline-block';
+              recordingtime.style.display = 'inline-block';
         
               var recorder = connection.recorder;
               if(!recorder) {
                 recorder = RecordRTC([event.stream], {
-                  type: 'video'
+                  type: 'video',
+                  disableLogs: false,
+                  video: {
+                        width: 1920,
+                        height: 1080
+                  }
                 });
                 recorder.startRecording();
+                dateStarted = new Date().getTime();
                 connection.recorder = recorder;
               }
               else {
@@ -352,6 +397,16 @@
         
               connection.recorder.streams.push(event.stream);
               recordingStatus.innerHTML = 'Recording ' + connection.recorder.streams.length + ' streams';
+
+              (function looper() {
+                if(!recorder) {
+                    return;
+                }
+
+                recordingtime.innerHTML = 'Recording Duration: ' + calculateTimeDuration((new Date().getTime() - dateStarted) / 1000);
+
+                setTimeout(looper, 1000);
+              })();
             }
         
             if(event.type === 'local') {
@@ -363,6 +418,7 @@
             }
         };
         
+        var recordingtime = document.getElementById('recording-time');
         var recordingStatus = document.getElementById('recording-status');
         var chkRecordConference = document.getElementById('record-entire-conference');
         var btnStopRecording = document.getElementById('btn-stop-recording');
@@ -376,7 +432,8 @@
             connection.recorder = null;
             btnStopRecording.style.display = 'none';
             recordingStatus.style.display = 'none';
-            chkRecordConference.parentNode.style.display = 'inline-block';
+            chkRecordConference.parentNode.style.display = 'none';
+            recordingtime.style.display = 'none';
           });
         };
         
@@ -410,6 +467,8 @@
         function disableInputButtonsView() {
             document.getElementById('room-id').onkeyup();
         
+            document.getElementById('record-entire-conference').style.display = "none";
+            document.getElementById('record').style.display = "none";
             document.getElementById('header').style.display = "none";
             document.getElementById('nav').style.display = "none";
             document.getElementById('footer').style.display = "none";
@@ -422,6 +481,8 @@
         function disableInputButtons(enable) {
             document.getElementById('room-id').onkeyup();
         
+            document.getElementById('record-entire-conference').style.display = "none";
+            document.getElementById('record').style.display = "none";
             document.getElementById('header').style.display = "none";
             document.getElementById('open-room').disabled = !enable;
             document.getElementById('webcam-share').disabled = !enable;
@@ -444,15 +505,15 @@
             //html += '<br>';
             if (source == 'group') {
                 html += 'Join URL: <a href="' + roomQueryStringURL + '" target="_blank">' + roomQueryStringURL + '</a>';
-                html += '<br>';
+                html += '<br />';
             }
             
             html += 'View URL: <a href="' + roomViewQueryStringURL + '" target="_blank">' + roomViewQueryStringURL + '</a>';
-            html += '<br>';
+            html += '<br />';
             html += 'View URL OBS (360p): <a href="view.html' + roomViewQueryStringURL + '&width=640" target="_blank">view.html' + roomViewQueryStringURL + '&width=640</a>';
-            html += '<br>';
+            html += '<br />';
             html += 'View URL OBS (720p): <a href="view.html' + roomViewQueryStringURL + '&width=1280" target="_blank">view.html' + roomViewQueryStringURL + '&width=1280</a>';
-            html += '<br>';
+            html += '<br />';
             html += 'View URL OBS (1080p): <a href="view.html' + roomViewQueryStringURL + '&width=1920" target="_blank">view.html' + roomViewQueryStringURL + '&width=1920</a>';
         
         
