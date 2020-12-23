@@ -173,6 +173,7 @@
                   alert(error);
                 }
             });
+            params.source = 'screen';
         };
         
         // ......................................................
@@ -318,6 +319,12 @@
                 //document.querySelector("video").requestFullscreen();
             }
             else if (params.source && params.source == 'webcam') {
+                var mediaElement = getHTMLMediaElement(video, {
+                    buttons: ['full-screen'],
+                    showOnMouseEnter: true
+                });
+            }
+            else if (params.source && params.source == 'screen') {
                 var mediaElement = getHTMLMediaElement(video, {
                     buttons: ['full-screen'],
                     showOnMouseEnter: true
@@ -537,11 +544,21 @@
             console.log(params);
         })();
         
+        function genID() {
+            var chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            var idsize = 8;
+            var streamid = '';
+            for (var i = 0; i < idsize; i++) {
+                rtn += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return rtn;
+        }
+
         var roomid = '';
         if (localStorage.getItem(connection.socketMessageEvent)) {
             roomid = localStorage.getItem(connection.socketMessageEvent);
         } else {
-            roomid = connection.token();
+            roomid = genID();
         }
         
         var txtRoomId = document.getElementById('room-id');
