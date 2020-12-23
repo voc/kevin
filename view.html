@@ -187,7 +187,7 @@
             mediaElement.id = event.streamid;
         
             // to keep room-id in cache
-            localStorage.setItem(connection.socketMessageEvent, connection.sessionid);
+            //localStorage.setItem(connection.socketMessageEvent, connection.sessionid);
         
                    
             if(event.type === 'local') {
@@ -253,17 +253,19 @@
         }
 
         var roomid = '';
-        if (localStorage.getItem(connection.socketMessageEvent)) {
-            roomid = localStorage.getItem(connection.socketMessageEvent);
-        } else {
-            roomid = genID();
-        }
+        //if (localStorage.getItem(connection.socketMessageEvent)) {
+        //    roomid = localStorage.getItem(connection.socketMessageEvent);
+        //} else {
+        //    roomid = genID();
+        //}
+        roomid = genID();
+        console.log('roomid gen: ' + roomid);
         
         var txtRoomId = document.getElementById('room-id');
         txtRoomId.value = roomid;
-        txtRoomId.onkeyup = txtRoomId.oninput = txtRoomId.onpaste = function() {
-            localStorage.setItem(connection.socketMessageEvent, document.getElementById('room-id').value);
-        };
+        //txtRoomId.onkeyup = txtRoomId.oninput = txtRoomId.onpaste = function() {
+        //    localStorage.setItem(connection.socketMessageEvent, document.getElementById('room-id').value);
+        //};
         
         var hashString = location.hash.replace('#', '');
         if (hashString.length && hashString.indexOf('comment-') == 0) {
@@ -279,7 +281,7 @@
         
         if (roomid && roomid.length) {
             document.getElementById('room-id').value = roomid;
-            localStorage.setItem(connection.socketMessageEvent, roomid);
+            //localStorage.setItem(connection.socketMessageEvent, roomid);
         
             // auto-join-room
             (function reCheckRoomPresence() {
