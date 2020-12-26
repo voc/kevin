@@ -31,7 +31,7 @@
                 </div>
                 <div class="col-lg-4">
                     <div class="mx-auto features-icons-item mb-5 mb-lg-0 mb-lg-3">
-                        <div class="d-flex features-icons-icon" id="webcam-share"><i class="icon-camrecorder m-auto text-primary" data-bs-hover-animate="pulse"></i></div>
+                        <div class="d-flex features-icons-icon"><i class="icon-camrecorder m-auto text-primary" data-toggle="modal" data-target="#preview-webcam" data-bs-hover-animate="pulse"></i></div>
                         <h3>Share Webcam</h3>
                         <p class="lead mb-0">Share your Webcam + Audio</p>
                     </div>
@@ -74,6 +74,29 @@
             </div>
         </div>
     </section>
+    <div class="modal fade" id="preview-webcam" tabindex="-1" aria-labelledby="preview-webcam-label" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="preview-webcam-label">Modal title</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                <div id="container" style="margin: 0px auto;width: 640px;height: 480px;">
+                    <video autoplay="true" id="videoPreview">
+                    
+                    </video>
+                </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary" id="webcam-share">Start</button>
+            </div>
+          </div>
+        </div>
+      </div>
     <footer class="footer bg-light">
         <div class="container">
             <div class="row" id="footer">
@@ -101,17 +124,16 @@
     <script src="assets/js/getHTMLMediaElement.js"></script>
     <script src="assets/js/RecordRTC.js"></script>
     <script>
-        window.addEventListener('beforeunload', function (e) {
-            e.preventDefault();
-            e.returnValue = '';
-        });
-
         // ......................................................
         // .......................UI Code........................
         // ......................................................
         document.getElementById('open-room').onclick = function() {
+            window.addEventListener('beforeunload', function (e) {
+                e.preventDefault();
+                e.returnValue = '';
+            });
             disableInputButtons();
-            connection.openOrJoin(document.getElementById('room-id').value, function(isRoomExist, roomid, error) {
+            connection.open(document.getElementById('room-id').value, function(isRoomExist, roomid, error) {
                 if(error) {
                     disableInputButtons(true);
                     alert(error);
@@ -123,6 +145,10 @@
         };
           
         document.getElementById('webcam-share').onclick = function() {
+            window.addEventListener('beforeunload', function (e) {
+                e.preventDefault();
+                e.returnValue = '';
+            });
             disableInputButtons();
             connection.sdpConstraints.mandatory = {
                 OfferToReceiveAudio: true,
@@ -134,7 +160,7 @@
                 oneway: true
             };
         
-            connection.openOrJoin(document.getElementById('room-id').value, function(isRoomExist, roomid, error) {
+            connection.open(document.getElementById('room-id').value, function(isRoomExist, roomid, error) {
                 if(error) {
                     disableInputButtons(true);
                     alert(error);
@@ -147,6 +173,10 @@
         };
         
         document.getElementById('screen-share').onclick = function() {
+            window.addEventListener('beforeunload', function (e) {
+                e.preventDefault();
+                e.returnValue = '';
+            });
             disableInputButtons();
             connection.sdpConstraints.mandatory = {
                 OfferToReceiveAudio: false,
@@ -157,7 +187,7 @@
                 oneway: true
             };
         
-            connection.openOrJoin(document.getElementById('room-id').value, function(isRoomExist, roomid, error) {
+            connection.open(document.getElementById('room-id').value, function(isRoomExist, roomid, error) {
                 if(error) {
                     disableInputButtons(true);
                     alert(error);
@@ -580,6 +610,9 @@
             document.getElementById('room-id').value = roomid;
             //localStorage.setItem(connection.socketMessageEvent, roomid);
         
+            if (action && action == 'join') {
+                connection.join(roomid);
+            }
             // auto-join-room
             (function reCheckRoomPresence() {
                 connection.checkPresence(roomid, function(isRoomExist) {
@@ -614,6 +647,44 @@
            navigator.connection.downlinkMax <= 0.115) {
           alert('2G is not supported. Please use a better internet service.');
         }
+
+        $(document).ready(function(){
+            $('#preview-webcam').on('shown.bs.modal', function (e) {
+                console.log('starting preview');
+                var preview = document.querySelector("#videoPreview");
+
+                if (navigator.mediaDevices.getUserMedia) {
+                navigator.mediaDevices.getUserMedia({ video: true })
+                    .then(function (stream) {
+                        preview.srcObject = stream;
+                    })
+                    .catch(function (error) {
+                        console.log("Something went wrong with the preview");
+                    });
+                }
+            })
+
+            $('#preview-webcam').on('hide.bs.modal', function (e) {
+                console.log('stoping preview');
+                var preview = document.querySelector("#videoPreview");
+
+                var stream = preview.srcObject;
+                var tracks = stream.getTracks();
+
+                for (var i = 0; i < tracks.length; i++) {
+                    var track = tracks[i];
+                    track.stop();
+                }
+
+                preview.srcObject = null;
+            })
+ 
+            $('#webcam-share').click(function(){
+                console.log('starting share');
+                $('#preview-webcam').modal('hide');
+            })
+        });
+        
         </script>
 </body>
 
