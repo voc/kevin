@@ -84,7 +84,7 @@
               </button>
             </div>
             <div class="modal-body">
-                <div id="container" style="margin: 0px auto;width: 100%;">
+                <div id="container-preview" style="margin: 0px auto;width: 100%;">
                     <div class="d-flex justify-content-center">
                         <video playsinline autoplay id="videoPreview" width="640"></video>
                     </div>
@@ -702,7 +702,7 @@
                     }
                     selectors.forEach((select, selectorIndex) => {
                         if (Array.prototype.slice.call(select.childNodes).some(n => n.value === values[selectorIndex])) {
-                        select.value = values[selectorIndex];
+                            select.value = values[selectorIndex];
                         }
                     });
                 }
@@ -746,6 +746,12 @@
 
                 function handleError(error) {
                     console.log('navigator.MediaDevices.getUserMedia error: ', error.message, error.name);
+                    if (error.name == 'NotAllowedError') {
+                        //document.getElementById('container-preview').style.display = "none";
+                        //document.getElementById('webcam-share').style.display = "none";
+                        alert("No devices found. Please check browser permissions for audio/video devices.");
+                        window.location.href = "index.html";
+                    }
                 }
 
                 function start() {
@@ -773,15 +779,17 @@
                 console.log('stoping preview');
                 var preview = document.querySelector("#videoPreview");
 
-                var stream = preview.srcObject;
-                var tracks = stream.getTracks();
+                if (preview.srcObject) {
+                    var stream = preview.srcObject;
+                    var tracks = stream.getTracks();
 
-                for (var i = 0; i < tracks.length; i++) {
-                    var track = tracks[i];
-                    track.stop();
+                    for (var i = 0; i < tracks.length; i++) {
+                        var track = tracks[i];
+                        track.stop();
+                    }
+
+                    preview.srcObject = null;
                 }
-
-                preview.srcObject = null;
             })
  
             $('#webcam-share').click(function(){
