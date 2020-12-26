@@ -78,16 +78,20 @@
         <div class="modal-dialog modal-xl">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="preview-webcam-label">Modal title</h5>
+              <h5 class="modal-title" id="preview-webcam-label">Preview</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
             <div class="modal-body">
-                <div id="container" style="margin: 0px auto;width: 640px;height: 480px;">
-                    <video autoplay="true" id="videoPreview">
-                    
-                    </video>
+                <div id="container" style="margin: 0px auto;width: 100%;">
+                    <div class="d-flex justify-content-center">
+                        <video playsinline autoplay id="videoPreview" width="640"></video>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <label for="videoSource" style="margin-top: 5px;">Video source: </label><select id="videoSource"></select>
+                        <label for="audioSource" style="margin-top: 5px;margin-left: 10px;">Audio source: </label><select id="audioSource"></select>
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">
@@ -158,6 +162,17 @@
                 audio: true,
                 video: true,
                 oneway: true
+            };
+
+            const audioInputSelect = document.querySelector('select#audioSource');
+            const videoSelect = document.querySelector('select#videoSource');
+            const audioSource = audioInputSelect.value;
+            const videoSource = videoSelect.value;
+            connection.mediaConstraints.audio = {
+                deviceId: audioSource
+            };
+            connection.mediaConstraints.video = {
+                deviceId: videoSource
             };
         
             connection.open(document.getElementById('room-id').value, function(isRoomExist, roomid, error) {
@@ -339,7 +354,6 @@
                     width: width,
                     showOnMouseEnter: false
                 });
-                //document.querySelector("video").requestFullscreen();
             }
             else if (params.source && params.source == 'webcam') {
                 var mediaElement = getHTMLMediaElement(video, {
@@ -651,17 +665,69 @@
         $(document).ready(function(){
             $('#preview-webcam').on('shown.bs.modal', function (e) {
                 console.log('starting preview');
-                var preview = document.querySelector("#videoPreview");
 
-                if (navigator.mediaDevices.getUserMedia) {
-                navigator.mediaDevices.getUserMedia({ video: true })
-                    .then(function (stream) {
-                        preview.srcObject = stream;
-                    })
-                    .catch(function (error) {
-                        console.log("Something went wrong with the preview");
+                const videoElement = document.querySelector('#videoPreview');
+                const audioInputSelect = document.querySelector('select#audioSource');
+                const videoSelect = document.querySelector('select#videoSource');
+                const selectors = [audioInputSelect, videoSelect];
+
+                function gotDevices(deviceInfos) {
+                    const values = selectors.map(select => select.value);
+                    selectors.forEach(select => {
+                        while (select.firstChild) {
+                        select.removeChild(select.firstChild);
+                        }
+                    });
+                    for (let i = 0; i !== deviceInfos.length; ++i) {
+                        const deviceInfo = deviceInfos[i];
+                        const option = document.createElement('option');
+                        option.value = deviceInfo.deviceId;
+                        if (deviceInfo.kind === 'audioinput') {
+                            option.text = deviceInfo.label || `microphone ${audioInputSelect.length + 1}`;
+                            audioInputSelect.appendChild(option);
+                        } else if (deviceInfo.kind === 'videoinput') {
+                            option.text = deviceInfo.label || `camera ${videoSelect.length + 1}`;
+                            videoSelect.appendChild(option);
+                        } else {
+                            console.log('Some other kind of source/device: ', deviceInfo);
+                        }
+                    }
+                    selectors.forEach((select, selectorIndex) => {
+                        if (Array.prototype.slice.call(select.childNodes).some(n => n.value === values[selectorIndex])) {
+                        select.value = values[selectorIndex];
+                        }
                     });
                 }
+
+                function gotStream(stream) {
+                    window.stream = stream;
+                    videoElement.srcObject = stream;
+                    return navigator.mediaDevices.enumerateDevices();
+                }
+
+                function handleError(error) {
+                    console.log('navigator.MediaDevices.getUserMedia error: ', error.message, error.name);
+                }
+
+                function start() {
+                    if (window.stream) {
+                        window.stream.getTracks().forEach(track => {
+                        track.stop();
+                        });
+                    }
+                    const audioSource = audioInputSelect.value;
+                    const videoSource = videoSelect.value;
+                    const constraints = {
+                        audio: {deviceId: audioSource ? {exact: audioSource} : undefined},
+                        video: {deviceId: videoSource ? {exact: videoSource} : undefined}
+                    };
+                    navigator.mediaDevices.getUserMedia(constraints).then(gotStream).then(gotDevices).catch(handleError);
+                }
+
+                navigator.mediaDevices.enumerateDevices().then(gotDevices);
+                audioInputSelect.onchange = start;
+                videoSelect.onchange = start;
+                start();
             })
 
             $('#preview-webcam').on('hide.bs.modal', function (e) {
