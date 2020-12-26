@@ -101,6 +101,11 @@
     <script src="assets/js/getHTMLMediaElement.js"></script>
     <script src="assets/js/RecordRTC.js"></script>
     <script>
+        window.addEventListener('beforeunload', function (e) {
+            e.preventDefault();
+            e.returnValue = '';
+        });
+
         // ......................................................
         // .......................UI Code........................
         // ......................................................
