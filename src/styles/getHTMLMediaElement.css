@@ -13,25 +13,20 @@ Documentation - github.com/muaz-khan/WebRTC-Experiment/tree/master/getMediaEleme
     user-select: none;
 }
 
-.media-container, .media-container * {
+/* .media-container, .media-container * {
     -moz-transition: all .5s ease-in-out;
     -ms-transition: all .5s ease-in-out;
     -o-transition: all .5s ease-in-out;
     -webkit-transition: all .5s ease-in-out;
     transition: all .5s ease-in-out;
-}
+} */
 
 .media-container {
-    max-width: 100%;
-    max-height: 100%;
+    width: 50%;
     display: inline-block;
     overflow: hidden;
     vertical-align: top;
     background: white;
-}
-
-.media-box {
-    background: black;
 }
 
 .media-controls, .volume-control {
@@ -118,7 +113,7 @@ Documentation - github.com/muaz-khan/WebRTC-Experiment/tree/master/getMediaEleme
 .media-box video {
     width: 100%;
     vertical-align: top;
-    object-fit: fill;
+    /* object-fit: fill; */
 }
 
 .media-box audio {

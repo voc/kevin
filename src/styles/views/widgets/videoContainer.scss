@@ -1,0 +1,35 @@
+@import "styles/variables";
+
+.videoContainer.decorations{
+    background: $gray-300;
+    margin: 0 auto;
+    text-align: center;
+
+    .spinner-border{
+        margin: 90px auto;
+    }
+
+    .media-container{
+        width: auto !important;
+        max-height: 50vw;
+
+        .media-box{
+            background: black;
+        }
+
+        video{
+            max-height: 100vh;
+        }
+
+        &:not(:fullscreen) {
+            .media-box{
+                border: 1px solid $gray-100;
+                margin: 1px;
+            }
+
+            video{
+                max-height: 80vh;
+            }
+        }
+    }
+}
