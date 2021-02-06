@@ -43,9 +43,7 @@ class ViewStream extends React.Component {
   render () {
     const { width } = this.props
     return (
-      <>
-        <VideoContainer ref={this.containerRef} decorations={!width} />
-      </>
+      <VideoContainer ref={this.containerRef} decorations={!width} />
     )
   }
 }

@@ -16,6 +16,7 @@ const preferredCodec = 'vp8'
 const iceServers = ['stun:kevin.c3voc.de:3479']
 
 export const Mode = Object.freeze({
+  ROOM: Symbol('room'),
   VIEW: Symbol('view'),
   WEBCAM: Symbol('webcam'),
   SCREEN: Symbol('screen')
@@ -34,7 +35,7 @@ export default class Connection {
       throw new Error('Container is required!')
     }
     this.config = config = Object.assign({}, config)
-    this.mode = config.mode
+    this.mode = config.mode || Mode.ROOM
     this.closed = false
     this.mediaElement = null
     this.connection = new RTCMultiConnection()
@@ -48,10 +49,6 @@ export default class Connection {
       audio: true,
       video: true
     }
-    connection.sdpConstraints.mandatory = {
-      OfferToReceiveAudio: true,
-      OfferToReceiveVideo: true
-    }
     connection.mediaConstraints = {
       video: getVideoConstraints(resolution),
       audio: true
@@ -61,6 +58,39 @@ export default class Connection {
     connection.iceServers = [{
       urls: iceServers
     }]
+
+    // offer to receive streams
+    connection.sdpConstraints.mandatory = {
+      OfferToReceiveAudio: this.mode === Mode.ROOM,
+      OfferToReceiveVideo: this.mode === Mode.ROOM
+    }
+
+    // force devices
+    if (config.audioDevice) {
+      connection.mediaConstraints.audio = {
+        deviceId: config.audioDevice
+      }
+    }
+
+    if (config.videoDevice) {
+      connection.mediaConstraints.video = {
+        deviceId: config.videoDevice
+      }
+    }
+
+    // Set oneway mode if we are not in a group chat
+    if (this.mode === Mode.VIEW || this.mode === Mode.WEBCAM) {
+      connection.session = {
+        audio: true,
+        video: true,
+        oneway: true
+      }
+    } else if (this.mode === Mode.SCREEN) {
+      connection.session = {
+        screen: true,
+        oneway: true
+      }
+    }
 
     // setup connection handlers
     connection.onstream = (event) => {
@@ -81,11 +111,6 @@ export default class Connection {
 
   // Join conference as stream receiver
   join (roomid) {
-    this.connection.session = {
-      audio: true,
-      video: true,
-      oneway: true
-    }
     this.connection.join(roomid)
   }
 

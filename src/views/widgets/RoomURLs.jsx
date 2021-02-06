@@ -1,3 +1,4 @@
+import 'styles/views/widgets/roomURLs.scss'
 import React from 'react'
 import PropTypes from 'prop-types'
 import { serialize } from 'js/url'
@@ -40,7 +41,7 @@ JoinLink.propTypes = {
 }
 
 const RoomURLs = ({ roomid, source }) => (
-  <div>
+  <div className='roomURLs'>
     <h3>Share URLs:</h3>
     {source === 'group' && <JoinLink roomid={roomid} />}
     <RoomLink roomid={roomid} />
