@@ -1,0 +1,44 @@
+// Libraries
+@import "variables";
+
+@import "~bootstrap/scss/reboot";
+@import "~bootstrap/scss/alert";
+@import "~bootstrap/scss/type";
+@import "~bootstrap/scss/grid";
+@import "~bootstrap/scss/buttons";
+@import "~bootstrap/scss/forms";
+@import "~bootstrap/scss/navbar";
+@import "~bootstrap/scss/spinners";
+@import "~bootstrap/scss/utilities";
+
+@import "~startbootstrap-landing-page/scss/global";
+@import "~startbootstrap-landing-page/scss/icons";
+@import "~startbootstrap-landing-page/scss/footer";
+
+@import "getHTMLMediaElement";
+
+#room-urls {
+  display: none;
+  background: #F1EDED;
+  border: 1px solid rgb(189, 189, 189);
+  border-left: 0;
+  border-right: 0;
+  margin: 10px;
+}
+
+.spinner-border {
+  color: $primary;
+}
+
+#videos-container {
+  margin: 20px 0;
+}
+
+#container-preview {
+  margin: 0px auto;
+  width: 100%;
+}
+
+#vumeter {
+  background-color: black;
+}

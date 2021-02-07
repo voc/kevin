@@ -1,0 +1,26 @@
+@import "styles/variables";
+
+.webcamPreview {
+  .vumeterWrap{
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+
+    // adapted from bootstrap form-control style
+    width: 100%;
+    height: $input-height;
+    padding: $input-padding-y $input-padding-x;
+    line-height: $input-line-height;
+    background-color: $input-bg;
+    background-clip: padding-box;
+    border: $input-border-width solid $input-border-color;
+    @include border-radius($input-border-radius, 0);
+    @include box-shadow($input-box-shadow);
+
+    .vumeter{
+      background: $gray-300;
+      width: 100%;
+      height: 12px;
+    }
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "name": "kevin",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "start": "webpack-dev-server --mode development --open",
+    "build": "webpack --mode production"
+  },
+  "keywords": [],
+  "author": "C3VOC",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/voc/kevin.git"
+  },
+  "dependencies": {
+    "aredux": "^0.1.1",
+    "bootstrap": "^4.6.0",
+    "immutable": "^4.0.0-rc.12",
+    "jquery": "^3.5.1",
+    "prop-types": "^15.7.2",
+    "react": "^16.14.0",
+    "react-dom": "^16.14.0",
+    "react-hot-loader": "^4.13.0",
+    "react-router-dom": "^5.2.0",
+    "recordrtc": "^5.6.1",
+    "rtcmulticonnection": "^3.7.0",
+    "socket.io-client": "^2.4.0",
+    "startbootstrap-landing-page": "^5.0.9",
+    "webrtc-adapter": "^7.7.0"
+  },
+  "devDependencies": {
+    "@neutrinojs/react": "^9.5.0",
+    "@neutrinojs/standardjs": "^9.5.0",
+    "dotenv-webpack": "^6.0.0",
+    "eslint": "^7.18.0",
+    "neutrino": "^9.5.0",
+    "sass": "^1.32.5",
+    "sass-loader": "^10.1.1",
+    "webpack": "^4.46.0",
+    "webpack-cli": "^3.3.12",
+    "webpack-dev-server": "^3.11.2"
+  }
+}
