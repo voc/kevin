@@ -1,24 +1,26 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import Connection from 'js/Connection'
+import Connection, { Mode } from 'js/Connection'
 import RoomURLs from 'views/widgets/RoomURLs'
 import VideoContainer from 'views/widgets/VideoContainer'
 import { connect } from 'aredux/lib/react'
 
-class ChatRoom extends React.Component {
-  constructor () {
+class ChatRoom extends React.PureComponent {
+  constructor ({ record }) {
     super()
-    this.containerRef = React.createRef()
-    this.state = {
-      isLoading: true
-    }
+    this.state = {}
   }
 
   componentDidMount () {
-    const { roomid } = this.props
-    this.connection = new Connection(this.containerRef.current)
-    this.connection.open(roomid, (roomExists, roomid, error) => {
-      const state = { error, isLoading: false }
+    const { roomid, record } = this.props
+
+    this.connection = new Connection({
+      mode: Mode.ROOM,
+      record: record
+    })
+
+    this.connection.openOrJoin(roomid, (roomExists, roomid, error) => {
+      const state = { error }
       if (this.connection.isInitiator()) {
         state.showRoomURLs = true
       }
@@ -33,8 +35,8 @@ class ChatRoom extends React.Component {
   }
 
   render () {
-    const { roomid } = this.props
-    const { showRoomURLs, error, isLoading } = this.state
+    const { roomid, record } = this.props
+    const { showRoomURLs, error } = this.state
     return (
       <div className='bg-light'>
         <div className='container'>
@@ -42,8 +44,8 @@ class ChatRoom extends React.Component {
             <div className='alert alert-danger' role='alert'>
               {error}
             </div>}
-          <VideoContainer ref={this.containerRef} isLoading={isLoading} decorations />
-          {showRoomURLs && <RoomURLs roomid={roomid} />}
+          <VideoContainer record={record} decorations />
+          {showRoomURLs && <RoomURLs roomid={roomid} join />}
         </div>
       </div>
     )
@@ -51,9 +53,11 @@ class ChatRoom extends React.Component {
 }
 
 ChatRoom.propTypes = {
-  roomid: PropTypes.string
+  roomid: PropTypes.string,
+  record: PropTypes.bool
 }
 
 export default connect((props, state) => {
-  props.set('roomid', state.get('roomid'))
+  props.set('roomid', state.getIn(['params', 'roomid']))
+  props.set('record', state.getIn(['params', 'record']))
 })(ChatRoom)

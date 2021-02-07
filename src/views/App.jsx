@@ -7,9 +7,9 @@ import {
   Route
 } from 'react-router-dom'
 
-import Nav from 'views/Nav'
-import Footer from 'views/Footer'
-import ErrorBoundary from 'views/ErrorBoundary'
+import ErrorBoundary from 'views/widgets/ErrorBoundary'
+import Footer from 'views/widgets/Footer'
+import Nav from 'views/widgets/Nav'
 import Home from 'views/Home'
 import ChatRoom from 'views/ChatRoom'
 import WebcamShare from 'views/WebcamShare'

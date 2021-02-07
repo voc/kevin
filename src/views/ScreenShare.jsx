@@ -5,19 +5,19 @@ import RoomURLs from 'views/widgets/RoomURLs'
 import VideoContainer from 'views/widgets/VideoContainer'
 import { connect } from 'aredux/lib/react'
 
-class ScreenShare extends React.Component {
+class ScreenShare extends React.PureComponent {
   constructor () {
     super()
-    this.containerRef = React.createRef()
     this.state = {
       isLoading: true
     }
   }
 
   componentDidMount () {
-    const { roomid } = this.props
-    this.connection = new Connection(this.containerRef.current, {
-      mode: Mode.SCREEN
+    const { roomid, record } = this.props
+    this.connection = new Connection({
+      mode: Mode.SCREEN,
+      record: record
     })
     this.connection.open(roomid, (roomExists, roomid, error) => {
       const state = { error, isLoading: false }
@@ -35,7 +35,7 @@ class ScreenShare extends React.Component {
   }
 
   render () {
-    const { roomid } = this.props
+    const { roomid, record } = this.props
     const { showRoomURLs, error, isLoading } = this.state
     return (
       <div className='bg-light'>
@@ -44,7 +44,7 @@ class ScreenShare extends React.Component {
             <div className='alert alert-danger' role='alert'>
               {error}
             </div>}
-          <VideoContainer ref={this.containerRef} isLoading={isLoading} decorations />
+          <VideoContainer isLoading={isLoading} record={record} decorations />
           {showRoomURLs && <RoomURLs roomid={roomid} />}
         </div>
       </div>
@@ -53,9 +53,11 @@ class ScreenShare extends React.Component {
 }
 
 ScreenShare.propTypes = {
-  roomid: PropTypes.string
+  roomid: PropTypes.string,
+  record: PropTypes.bool
 }
 
 export default connect((props, state) => {
-  props.set('roomid', state.get('roomid'))
+  props.set('roomid', state.getIn(['params', 'roomid']))
+  props.set('record', state.getIn(['params', 'record']))
 })(ScreenShare)

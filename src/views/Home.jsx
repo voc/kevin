@@ -1,9 +1,13 @@
+import 'styles/views/home.scss'
 import React from 'react'
 import { Link } from 'react-router-dom'
-import VideoContainer from 'views/widgets/VideoContainer'
+import PropTypes from 'prop-types'
+import { connect } from 'aredux/lib/react'
+import { setRecord } from 'js/actions/recording'
 
-export default class Home extends React.Component {
+class Home extends React.PureComponent {
   render () {
+    const { record, dispatch } = this.props
     return (
       <div className='home'>
         <section className='features-icons bg-light text-center'>
@@ -38,13 +42,11 @@ export default class Home extends React.Component {
               </Link>
             </div>
             <div className='row'>
-              <div className='col-auto align-self-center mx-auto'>
-                <VideoContainer />
-              </div>
-            </div>
-            <div className='row'>
               <div className='col-auto align-self-center mx-auto form-check'>
-                <input className='form-check-input' type='checkbox' value='' id='recordInput' />
+                <input
+                  className='form-check-input' type='checkbox' id='recordInput'
+                  checked={record} onChange={e => dispatch(setRecord(e.target.checked))}
+                />
                 <label className='form-check-label' htmlFor='recordInput'>
                   Enable Recording
                 </label>
@@ -56,3 +58,12 @@ export default class Home extends React.Component {
     )
   }
 }
+
+Home.propTypes = {
+  record: PropTypes.bool,
+  dispatch: PropTypes.func
+}
+
+export default connect((props, state) => {
+  props.set('record', state.getIn(['params', 'record']))
+})(Home)

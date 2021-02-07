@@ -1,5 +1,4 @@
 export default {
-  // backendURL: '/',
-  backendURL: 'http://localhost:5001/',
+  backendURL: '/',
   backendEvent: 'rC3-VOCcast'
 }

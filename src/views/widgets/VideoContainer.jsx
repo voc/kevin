@@ -1,22 +1,31 @@
 import 'styles/views/widgets/videoContainer.scss'
 import React from 'react'
 import PropTypes from 'prop-types'
-import RecordingControl from 'views/RecordingControl'
+import { connect } from 'aredux/lib/react'
+import RecordingControl from 'views/widgets/RecordingControl'
+import MediaElement from 'views/widgets/MediaElement'
 
-const VideoContainer = React.forwardRef(({ record, isLoading, decorations }, ref) => (
-  <>
-    <div className={'videoContainer ' + (decorations ? 'decorations' : '')} ref={ref}>
-      {decorations && isLoading && <div className='spinner-border' />}
-    </div>
-    {record && <RecordingControl />}
-  </>
-))
+class VideoContainer extends React.PureComponent {
+  render () {
+    const { record, decorations, streams } = this.props
+    return (
+      <>
+        <div className={'videoContainer ' + (decorations ? 'decorations' : '')}>
+          {decorations && Object.keys(streams).length === 0 && <div className='spinner-border' />}
+          {Object.values(streams).map(stream => (<MediaElement key={stream.userid} stream={stream} />))}
+        </div>
+        {record && <RecordingControl />}
+      </>
+    )
+  }
+}
 
 VideoContainer.propTypes = {
   record: PropTypes.bool,
-  isLoading: PropTypes.bool,
-  decorations: PropTypes.bool
+  decorations: PropTypes.bool,
+  streams: PropTypes.object
 }
-VideoContainer.displayName = 'VideoContainer'
 
-export default VideoContainer
+export default connect((props, state) => {
+  props.set('streams', state.get('streams'))
+})(VideoContainer)

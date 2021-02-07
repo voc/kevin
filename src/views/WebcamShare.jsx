@@ -13,7 +13,6 @@ class WebcamShare extends React.PureComponent {
       selectDevice: true,
       showRoomURLs: false
     }
-    this.containerRef = React.createRef()
     this.startStream = this.startStream.bind(this)
     this.handleDeviceSelect = this.handleDeviceSelect.bind(this)
   }
@@ -26,11 +25,12 @@ class WebcamShare extends React.PureComponent {
   }
 
   startStream () {
-    const { roomid } = this.props
+    const { roomid, record } = this.props
     const { devices } = this.state
 
-    this.connection = new Connection(this.containerRef.current, {
+    this.connection = new Connection({
       mode: Mode.WEBCAM,
+      record: record,
       audioDevice: devices.audio,
       videoDevice: devices.video
     })
@@ -51,7 +51,7 @@ class WebcamShare extends React.PureComponent {
   }
 
   render () {
-    const { roomid } = this.props
+    const { roomid, record } = this.props
     const { selectDevice, showRoomURLs, error } = this.state
     return (
       <div className='bg-light'>
@@ -62,7 +62,7 @@ class WebcamShare extends React.PureComponent {
             </div>}
           {selectDevice
             ? <WebcamPreview onSelect={this.handleDeviceSelect} />
-            : <VideoContainer ref={this.containerRef} />}
+            : <VideoContainer record={record} decorations />}
           {showRoomURLs && <RoomURLs roomid={roomid} />}
         </div>
       </div>
@@ -71,9 +71,11 @@ class WebcamShare extends React.PureComponent {
 }
 
 WebcamShare.propTypes = {
-  roomid: PropTypes.string
+  roomid: PropTypes.string,
+  record: PropTypes.bool
 }
 
 export default connect((props, state) => {
-  props.set('roomid', state.get('roomid'))
+  props.set('roomid', state.getIn(['params', 'roomid']))
+  props.set('record', state.get(['params', 'record']))
 })(WebcamShare)

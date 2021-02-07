@@ -27,22 +27,3 @@ store.dispatch(parseParams())
 
 // Mount App in html page
 render(<Provider store={store}><App /></Provider>, document.getElementById('app'))
-
-// const connection = new Connection()
-// const params = getURLParams()
-// const roomid = getRoomID()
-
-// const action = params.action
-// if (roomid && roomid.length) {
-//   document.getElementById('room-id').value = roomid
-
-//   if (action && action === 'join') {
-//     connection.join(roomid)
-//   }
-//   // auto-join-room
-//   (function reCheckRoomPresence () {
-//     connection.joinRoomIfExists(roomid).catch(() => {
-//       setTimeout(reCheckRoomPresence, 5000)
-//     })
-//   })()
-// }

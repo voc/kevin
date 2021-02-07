@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-export default class ErrorBoundary extends React.Component {
+export default class ErrorBoundary extends React.PureComponent {
   constructor (props) {
     super(props)
     this.state = { error: null, errorInfo: null }

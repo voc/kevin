@@ -23,12 +23,12 @@ module.exports = {
 
     // Enable eslint autofixer
     // Note: leads to hot-reload loops on errors
-    // (neutrino) => {
-    //   neutrino.config.module.rule('lint').use('eslint').tap(args => {
-    //     args.fix = true
-    //     return args
-    //   })
-    // },
+    (neutrino) => {
+      neutrino.config.module.rule('lint').use('eslint').tap(args => {
+        args.fix = true
+        return args
+      })
+    },
 
     // Resolve modules within ./src without relative URL
     (neutrino) => {

@@ -1,33 +1,64 @@
 @import "styles/variables";
 
-.videoContainer.decorations{
-  background: $gray-300;
-  margin: 0 auto;
-  text-align: center;
-
-  .spinner-border{
-    margin: 30vh auto;
-  }
-
+.videoContainer{
   .media-container{
-    width: auto !important;
+    position: relative;
+    background: $gray-300;
 
-    .media-box{
-      background: black;
-    }
+    // &:before{
+    //   position: absolute;
+    //   width: 100%;
+    //   height: 100%;
+    //   text-align: center;
+    //   content: "Click to play";
+    //   color: $gray-500;
+    //   font-size: $h4-font-size;
+    // }
 
     video{
-      max-height: 100vh;
+      position: relative;
+    }
+  }
+
+  &.decorations{
+    background: $gray-300;
+    margin: 0 auto;
+    text-align: center;
+
+    .spinner-border{
+      margin: 9/16 * 50% auto;
     }
 
-    &:not(:fullscreen) {
-      .media-box{
-        border: 1px solid $gray-100;
-        margin: 1px;
-      }
+    .media-container{
+      width: auto !important;
 
       video{
-        max-height: 80vh;
+        max-height: 100vh;
+      }
+
+      &:not(:fullscreen) {
+        video{
+          max-height: 80vh;
+        }
+      }
+
+      &:fullscreen {
+        display: flex !important;
+        align-items: center;
+        background: black;
+
+        .media-box{
+          width: 100%;
+        }
+
+        .media-controls{
+          display: flex;
+          align-self: start;
+        }
+
+        .zoom-out{
+          cursor: pointer;
+        }
       }
     }
   }

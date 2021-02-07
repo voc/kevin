@@ -1,3 +1,7 @@
+@import "styles/variables";
+
 .roomURLs{
-    padding-bottom: 10px;
+    padding: 1rem 2rem;
+    background: white;
+    border: $border-width solid $border-color;
 }

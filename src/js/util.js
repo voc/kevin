@@ -44,7 +44,7 @@ export const generateRoomId = () => {
 //   return url.deserialize(location.search)
 // }())
 
-export const calculateTimeDuration = (secs) => {
+export const formatDuration = (secs) => {
   var hr = Math.floor(secs / 3600)
   var min = Math.floor((secs - (hr * 3600)) / 60)
   var sec = Math.floor(secs - (hr * 3600) - (min * 60))

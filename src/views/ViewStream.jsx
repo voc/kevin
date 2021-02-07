@@ -4,12 +4,11 @@ import { connect } from 'aredux/lib/react'
 import Connection, { Mode } from 'js/Connection'
 import VideoContainer from 'views/widgets/VideoContainer'
 
-class ViewStream extends React.Component {
+class ViewStream extends React.PureComponent {
   constructor () {
     super()
     this.state = {}
     this.timeout = null
-    this.containerRef = React.createRef()
     this.checkRoomPresence = this.checkRoomPresence.bind(this)
   }
 
@@ -25,10 +24,11 @@ class ViewStream extends React.Component {
   }
 
   componentDidMount () {
-    const { width } = this.props
-    this.connection = new Connection(this.containerRef.current, {
+    const { width, record } = this.props
+    this.connection = new Connection({
       mode: Mode.VIEW,
-      width: width
+      width: width,
+      record: record
     })
     this.checkRoomPresence()
   }
@@ -41,19 +41,21 @@ class ViewStream extends React.Component {
   }
 
   render () {
-    const { width } = this.props
+    const { width, record } = this.props
     return (
-      <VideoContainer ref={this.containerRef} decorations={!width} />
+      <VideoContainer decorations={!width} record={record} />
     )
   }
 }
 
 ViewStream.propTypes = {
   roomid: PropTypes.string,
-  width: PropTypes.number
+  width: PropTypes.number,
+  record: PropTypes.bool
 }
 
 export default connect((props, state) => {
-  props.set('roomid', state.get('roomid'))
-  props.set('width', state.get('width'))
+  props.set('roomid', state.getIn(['params', 'roomid']))
+  props.set('width', state.getIn(['params', 'width']))
+  props.set('record', state.getIn(['params', 'record']))
 })(ViewStream)

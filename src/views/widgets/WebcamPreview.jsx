@@ -30,7 +30,6 @@ class WebcamPreview extends React.PureComponent {
       video: { deviceId: videoSource ? { exact: videoSource } : undefined }
     }
     this.stopStream()
-    console.log('use constraints', constraints)
     navigator.mediaDevices.getUserMedia(constraints)
       .then(this.handleStream.bind(this))
       .then(this.handleDevices.bind(this))
@@ -147,7 +146,7 @@ class WebcamPreview extends React.PureComponent {
             {error}
           </div>}
         <div className='d-flex justify-content-center'>
-          <h5>Select Device</h5>
+          <h5>Preview</h5>
         </div>
         <div id='container-preview'>
           <div className='d-flex justify-content-center'>

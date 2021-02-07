@@ -12,15 +12,15 @@ const RoomLink = ({ roomid, width }) => {
 
   if (width) {
     return (
-      <p>
-        VIEW URL OBS ({width}p): <a href={url} target='_blank' rel='noreferrer'>{url}</a>
-      </p>
+      <>
+        View URL OBS ({width}p): <a href={url} target='_blank' rel='noreferrer'>{url}</a><br />
+      </>
     )
   } else {
     return (
-      <p>
-        VIEW URL: <a href={url} target='_blank' rel='noreferrer'>{url}</a>
-      </p>
+      <>
+        View URL: <a href={url} target='_blank' rel='noreferrer'>{url}</a><br />
+      </>
     )
   }
 }
@@ -29,7 +29,7 @@ RoomLink.propTypes = {
 }
 
 const JoinLink = ({ roomid }) => {
-  const url = `view.html?${serialize({ roomid })}`
+  const url = `/chatRoom?${serialize({ roomid })}`
   return (
     <p>
       Join URL: <a href={url} target='_blank' rel='noreferrer'>{url}</a>
@@ -40,10 +40,10 @@ JoinLink.propTypes = {
   roomid: PropTypes.string.isRequired
 }
 
-const RoomURLs = ({ roomid, source }) => (
+const RoomURLs = ({ roomid, join }) => (
   <div className='roomURLs'>
-    <h3>Share URLs:</h3>
-    {source === 'group' && <JoinLink roomid={roomid} />}
+    <h4>Share URLs:</h4>
+    {join && <JoinLink roomid={roomid} />}
     <RoomLink roomid={roomid} />
     <RoomLink roomid={roomid} width={360} />
     <RoomLink roomid={roomid} width={720} />
@@ -52,7 +52,7 @@ const RoomURLs = ({ roomid, source }) => (
 )
 RoomURLs.propTypes = {
   roomid: PropTypes.string.isRequired,
-  source: PropTypes.string
+  join: PropTypes.bool
 }
 
 export default RoomURLs

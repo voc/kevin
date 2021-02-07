@@ -10,11 +10,11 @@
   "author": "C3VOC",
   "license": "MIT",
   "repository": {
-    "type" : "git",
-    "url" : "https://github.com/voc/kevin.git"
+    "type": "git",
+    "url": "https://github.com/voc/kevin.git"
   },
   "dependencies": {
-    "aredux": "^0.1.0",
+    "aredux": "^0.1.1",
     "bootstrap": "^4.6.0",
     "immutable": "^4.0.0-rc.12",
     "jquery": "^3.5.1",
