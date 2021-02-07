@@ -4,18 +4,6 @@ import { formatDuration } from 'js/util'
 import { connect } from 'aredux/lib/react'
 import { stopRecording } from 'js/actions/recording'
 
-// recordingStatus.innerHTML = 'Recording ' + connection.recorder.streams.length + ' streams';
-
-// (function looper () {
-//   // if (!recorder) {
-//   //   return
-//   // }
-
-//   // recordingtime.innerHTML = 'Recording Duration: ' + calculateTimeDuration()
-
-//   setTimeout(looper, 1000)
-// })()
-
 class RecordingControl extends React.PureComponent {
   constructor () {
     super()
