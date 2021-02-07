@@ -10,20 +10,34 @@ cd kevin
 npm install && npm run build
 ```
 
-## Usage
+## Deployment
+- Build and serve the kevin static files via your webserver
+- Setup https://github.com/muaz-khan/RTCMultiConnection-Server on the same URL as signalling backend (preferably via a Reverse-Proxy)
+  - witht the default setup you need to set ```"socketMessageEvent": "rC3-VOCcast-Message"``` in the RTCMultiConnection-Server config.json
 
+## Usage
 ### URL parameters
+- roomid - use a fixed roomid (for all modes)
+- width - pass custom width to ```/view```
+- record - record the stream (activated if set at all)
 
 ## Contributing
 Build and install dependencies like above.
 
-**Develop locally with**
+### Run hot-reloading dev server
 ```
 npm run start
 ```
 
-**Show webpack options**
+### Use a RTCMulti server at a different address
+You can overwrite the default backend from a .env file like so:
+```bash
+BACKEND_URL=http://localhost:5001/
+```
+
+### Changing webpack options
+List the current webpack config with:
 ```
 npx neutrino --inspect
 ```
-These can be modified via .neutrinorc.js
+It can be modified via .neutrinorc.js

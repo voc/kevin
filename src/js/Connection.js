@@ -4,7 +4,7 @@ import RTCMultiConnection from 'rtcmulticonnection'
 import RecordRTC from 'recordrtc'
 import DetectRTC from 'detectrtc'
 import { getVideoConstraints, getSDPHandler } from 'js/Codecs'
-import kevinConfig from 'js/config'
+import environment from 'js/environment'
 import store from 'js/store'
 import { addStream, removeStream } from 'js/actions/stream'
 import { startRecording } from 'js/actions/recording'
@@ -40,8 +40,8 @@ export default class Connection extends EventEmitter {
 
     // setup connection settings
     const connection = this.connection
-    connection.socketURL = kevinConfig.backendURL
-    connection.socketMessageEvent = kevinConfig.backendEvent
+    connection.socketURL = environment.backendURL
+    connection.socketMessageEvent = environment.backendEvent
     connection.session = {
       audio: true,
       video: true
@@ -186,7 +186,7 @@ export default class Connection extends EventEmitter {
 
     // subscribe for recording stop
     const unsubscribe = store.subscribe((state) => {
-      if (!state.getIn(['recording', 'active'])) {
+      if (!state.getIn(['params', 'recording', 'active'])) {
         console.log('stopped recording')
         recorder.stopRecording(function () {
           const blob = recorder.getBlob()

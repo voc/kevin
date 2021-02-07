@@ -1,3 +1,4 @@
+import 'styles/views/widgets/recordingControl.scss'
 import React from 'react'
 import PropTypes from 'prop-types'
 import { formatDuration } from 'js/util'
@@ -14,7 +15,7 @@ class RecordingControl extends React.PureComponent {
   }
 
   componentWillUnmount () {
-    if (this.timeout) { clearTimeout(this.timeout) }
+    if (this.timeout) { console.log('clear timeout'); clearTimeout(this.timeout) }
   }
 
   updateTime () {
@@ -32,21 +33,21 @@ class RecordingControl extends React.PureComponent {
     const { dispatch, recording } = this.props
     const duration = formatDuration((this.state.now - recording.started) / 1000)
     return (
-      <>
-        <div className='row'>
-          <div className='col-lg-4 align-self-center mx-auto'>
-            {recording.active ? `Recording ${recording.streams} streams` : 'Recording stopped'}
-          </div>
-          <div className='col-lg-4 align-self-center mx-auto'>
-            {recording.active && <>Recording Duration: {duration}</ >}
-          </div>
-          <div className='col-lg-4 align-self-center mx-auto'>
+      <div className='recordingControl'>
+        <div className='col-md-4 text-center'>
+          {recording.active ? `Recording ${recording.streams} streams` : 'Recording stopped'}
+        </div>
+        <div className='col-md-4 text-center'>
+          {recording.active && <>Recording Duration: {duration}</ >}
+        </div>
+        <div className='col-md-4 text-center'>
+          {recording.active && (
             <button className='btn btn-primary' type='button' onClick={() => dispatch(stopRecording())}>
               Stop Recording
             </button>
-          </div>
+          )}
         </div>
-      </>
+      </div>
     )
   }
 }

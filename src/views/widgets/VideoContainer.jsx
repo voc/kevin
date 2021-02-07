@@ -28,4 +28,5 @@ VideoContainer.propTypes = {
 
 export default connect((props, state) => {
   props.set('streams', state.get('streams'))
+  props.set('record', state.getIn(['params', 'record']))
 })(VideoContainer)

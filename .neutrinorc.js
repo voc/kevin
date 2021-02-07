@@ -1,3 +1,4 @@
+const webpack = require('webpack')
 const path = require('path');
 const standardjs = require('@neutrinojs/standardjs');
 const react = require('@neutrinojs/react');
@@ -35,6 +36,21 @@ module.exports = {
       const modules = neutrino.config.resolve.modules
       modules.add(path.resolve(__dirname, 'src'))
       modules.add(path.resolve(__dirname, 'node_modules'))
+    },
+
+    // Set environment
+    (neutrino) => {
+      neutrino.config.plugin('dotenv')
+        .use(require.resolve('dotenv-webpack'));
+
+      const commitHash = require('child_process')
+        .execSync('git rev-parse --short HEAD')
+        .toString();
+      const version = require('./package.json').version
+      neutrino.config.plugin('define')
+        .use(webpack.DefinePlugin, [{
+          'process.env.VERSION': JSON.stringify(`v${version}-${commitHash}`)
+        }]);
     }
   ],
 };

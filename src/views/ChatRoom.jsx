@@ -19,6 +19,7 @@ class ChatRoom extends React.PureComponent {
       record: record
     })
 
+    console.log('start connection', roomid, record)
     this.connection.openOrJoin(roomid, (roomExists, roomid, error) => {
       const state = { error }
       if (this.connection.isInitiator()) {
